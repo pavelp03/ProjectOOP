@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Shooeshop.Data;
+using Shooeshop.Models;
 
 namespace Shooeshop.Controllers
 {
@@ -47,7 +48,18 @@ namespace Shooeshop.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            ProductsVM model = new ProductsVM();
+
+
+            model.Category = _context.Categories.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+                Selected = (x.Id == model.CategoryId)
+            }
+            ).ToList();
+
+            //ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
             return View();
         }
 

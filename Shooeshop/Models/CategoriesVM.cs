@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Shooeshop.Data;
+using System.Collections.Generic;
 
-namespace Shooeshop.Data
+namespace Shooeshop.Models
 {
-    public class Category
+    public class CategoriesVM
     {
         public int Id { get; set; }
         public string Name { get; set; }

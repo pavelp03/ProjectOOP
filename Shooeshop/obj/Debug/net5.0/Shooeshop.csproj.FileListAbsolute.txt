@@ -179,3 +179,4 @@ D:\git\ASP\Shooeshop\Shooeshop\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Accou
 D:\git\ASP\Shooeshop\Shooeshop\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\_ViewImports.cshtml.g.cs
 D:\git\ASP\Shooeshop\Shooeshop\obj\Debug\net5.0\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.cshtml.g.cs
 D:\git\ASP\Shooeshop\Shooeshop\obj\Debug\net5.0\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
+D:\git\ASP\Shooeshop\Shooeshop\bin\Debug\net5.0\Microsoft.AspNet.Identity.Core.dll
