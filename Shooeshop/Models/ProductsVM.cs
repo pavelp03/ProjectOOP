@@ -17,15 +17,13 @@ namespace Shooeshop.Models
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
+        public List<SelectListItem> Product { get; set; }
+        public string ImageFile { get; set; }
 
-        public int CategoryId { get; set; }
+         public int CategoryId { get; set; }
         public List<SelectListItem> Category { get; set; }
-
-        [EnumDataType(typeof(PurposeShoe))]
-        public PurposeShoe PurposeShoe { get; set; }
-
+        public PurposeShoeType Purpose { get; set; }
         public string Description { get; set; }
-
         [Required(ErrorMessage = "Това поле е задължително!")]
         public int Size { get; set; }
 

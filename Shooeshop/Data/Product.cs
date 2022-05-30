@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shooeshop.Data
@@ -16,8 +18,12 @@ namespace Shooeshop.Data
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
-        public PurposeShoe Purpose { get; set; }
-
+        [NotMapped]
+        [DisplayName("Upload File")]
+        public IFormFile ImageFile { get; set; }
+       
+        public PurposeShoeType Purpose { get; set; }
+        public ICollection<ProductImages> ProductImages { get; set; }
         public ICollection<Order> Orders { get; set; }
     }
 }

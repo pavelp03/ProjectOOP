@@ -1,32 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Shooeshop.Data;
 using Shooeshop.Models;
+using Shooeshop.Data.Migrations;
 
 namespace Shooeshop.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this.hostEnvironment = hostEnvironment;
         }
 
-        // GET: Products
+        
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Products.Include(p => p.Category);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Products/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,12 +50,11 @@ namespace Shooeshop.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
+       
         public IActionResult Create()
         {
             ProductsVM model = new ProductsVM();
-
-
+        
             model.Category = _context.Categories.Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -58,30 +62,48 @@ namespace Shooeshop.Controllers
                 Selected = (x.Id == model.CategoryId)
             }
             ).ToList();
-
-            //ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-            return View();
+            return View(model);
         }
 
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,Description,Size,CategoryId,Purpose")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Price,Description,Size,CategoryId,Purpose")] ProductsVM product)
+        
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                Product modelToDB = new Product();
+
+                modelToDB.Name = product.Name;
+                modelToDB.Price = product.Price;
+                modelToDB.Size = product.Size;
+                modelToDB.Description = product.Description;
+                modelToDB.CategoryId = product.CategoryId;
+                modelToDB.Purpose = product.Purpose;
+
+                _context.Add(modelToDB);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            return View(product);
-        }
 
-        // GET: Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+            ProductsVM model = new ProductsVM();
+
+            model.Category = _context.Categories.Select(categ => new SelectListItem
+            {
+                Text = categ.Name,
+                Value = categ.Id.ToString(),
+                Selected = (categ.Id == model.CategoryId)
+            }
+            ).ToList();
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
+            return View(model);
+        }
+    
+
+                
+                public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -95,45 +117,57 @@ namespace Shooeshop.Controllers
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
             return View(product);
+
+            ProductsVM model = new ProductsVM()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                CategoryId = product.CategoryId,
+                Description = product.Description,
+                Price = product.Price,
+                Size = product.Size,
+                Purpose = product.Purpose,
+
+            };
+            return View(model);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Description,Size,CategoryId,Purpose")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Description,Size,CategoryId,Purpose")] ProductsVM product)
         {
-            if (id != product.Id)
+            Product modelToDB = await _context.Products.FindAsync(id);
+            if (id != modelToDB.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(modelToDB);
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            return View(product);
+
+            try
+            {
+                _context.Update(modelToDB);
+                await _context.SaveChangesAsync(); 
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                if (!ProductExists(modelToDB.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Details", new { id = id });
         }
 
-        // GET: Products/Delete/5
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -152,7 +186,7 @@ namespace Shooeshop.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

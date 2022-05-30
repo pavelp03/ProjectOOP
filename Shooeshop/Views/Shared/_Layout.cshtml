@@ -1,17 +1,32 @@
 ﻿<!DOCTYPE html>
+
 <html lang="en">
+   
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Shooeshop</title>
+    <title>@ViewData["Title"] - Лека стъпка </title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+         .navbar {  
+  float:none;  
+  padding: 15px 15px;  
+  font-size: 20px;  
+  line-height: 33px;  
+  font-family:'Facebook Letter Faces';
+} 
+    </style>
+    
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light badge-primary border-bottom custom-checkbox mb-3">
+          
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Shooeshop</a>
+                  <img src="https://media.istockphoto.com/vectors/modern-sports-shoes-logo-vector-id1307591164" alt="Leka stupka" height="80" width="80" style="border-radius: 8px;"/>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,17 +36,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="@(ViewContext.RouteData.Values["Action"].ToString()=="Categories"? "active":"")">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
                         </li>
-                         <li class="nav-item">
+                         <li class="@(ViewContext.RouteData.Values["Action"].ToString()=="Products"? "active":"")">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                         </li>
-                         <li class="nav-item">
+                         <li class="@(ViewContext.RouteData.Values["Action"].ToString()=="Orders"? "active":"")">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

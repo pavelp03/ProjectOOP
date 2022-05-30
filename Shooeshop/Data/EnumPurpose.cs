@@ -1,4 +1,4 @@
 ﻿namespace Shooeshop.Data
 {
-    public enum PurposeShoe { Men, Women, KIds, Unisex }
+    public enum PurposeShoeType { Men=1, Women=2, KIds=3, Unisex=4 }
 }

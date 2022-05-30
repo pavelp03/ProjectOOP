@@ -15,9 +15,8 @@ namespace Shooeshop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
-        // private readonly ApplicationDbContext _context;
-       // private readonly RoleManager<IdentityRole> _roleManager;
-       // private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<User> _signInManager;
 
         public OrdersController(ApplicationDbContext context, UserManager<User> userManager)
         {
@@ -66,20 +65,14 @@ namespace Shooeshop.Controllers
 
             }
             ).ToList();
-            var idUser = _userManager.GetUserId(User);
-            var idUser1 = _userManager.GetUserId(HttpContext.User);
-            ViewBag.UserId = idUser1;
-            // ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name");
             return View(model);
         }
 
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProductId,UserId,OrderedOn,")] OrdersVM order)
-        {  // ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", order.ProductId);
+        { 
             if (ModelState.IsValid)
             {
                 OrdersVM model = new OrdersVM();
@@ -97,7 +90,6 @@ namespace Shooeshop.Controllers
             Order modelToDB = new Order
             {
                 ProductId = order.ProductId,
-                UserId = _userManager.GetUserId(User),
                 OrderedOn = order.OrderedOn,
             };
             _context.Add(modelToDB);
@@ -106,7 +98,7 @@ namespace Shooeshop.Controllers
         }
 
 
-        // GET: Orders/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -123,9 +115,7 @@ namespace Shooeshop.Controllers
             return View(order);
         }
 
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,UserId,OrderedOn")] Order order)
@@ -163,11 +153,10 @@ namespace Shooeshop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction("Details", new { id = id });
-          //  ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", order.ProductId);
-           // return View(order);
+           
         }
 
-        // GET: Orders/Delete/5
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -186,7 +175,6 @@ namespace Shooeshop.Controllers
             return View(order);
         }
 
-        // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

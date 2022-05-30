@@ -1,4 +1,5 @@
-﻿using Shooeshop.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Shooeshop.Data;
 using System.Collections.Generic;
 
 namespace Shooeshop.Models
@@ -8,6 +9,6 @@ namespace Shooeshop.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<SelectListItem> Products { get; set; }
     }
 }
