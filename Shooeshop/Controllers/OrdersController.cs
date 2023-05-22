@@ -92,7 +92,8 @@ namespace Shooeshop.Controllers
                 ProductId = order.ProductId,
                 OrderedOn = order.OrderedOn,
             };
-            _context.Add(modelToDB);
+
+            _context.Orders.Add(modelToDB);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
